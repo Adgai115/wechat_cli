@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.pyo
+bin/find_all_keys_macos.arm64
+.DS_Store
+Thumbs.db
