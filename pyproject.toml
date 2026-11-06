@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wechat-cli"
+version = "0.3.0"
+description = "WeChat data query CLI for LLMs — with WeChat 4.x (4.0.3.39+) key support"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Adgai115" }]
+keywords = ["wechat", "weixin", "sqlcipher", "llm", "cli"]
+dependencies = [
+    "click>=8.1,<9",
+    "pycryptodome>=3.19,<4",
+    "zstandard>=0.22",
+]
+
+[project.optional-dependencies]
+frida = ["frida>=16"]
+
+[project.scripts]
+wechat-cli = "wechat_cli.main:cli"
+wxcli = "wechat_cli.main:cli"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["wechat_cli*"]
