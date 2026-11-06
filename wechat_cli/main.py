@@ -6,7 +6,7 @@ import click
 
 from .core.context import AppContext
 
-_VERSION = "0.3.0"
+_VERSION = "0.4.0"
 
 
 @click.group()
@@ -55,6 +55,7 @@ from .commands.export import export
 from .commands.stats import stats
 from .commands.unread import unread
 from .commands.favorites import favorites
+from .commands.media import media
 
 cli.add_command(init)
 cli.add_command(sessions)
@@ -67,6 +68,7 @@ cli.add_command(export)
 cli.add_command(stats)
 cli.add_command(unread)
 cli.add_command(favorites)
+cli.add_command(media)
 
 
 if __name__ == "__main__":

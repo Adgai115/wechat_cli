@@ -112,3 +112,31 @@ wxcli sessions       # 与 wechat-cli 完全等价
 ```bash
 npm uninstall -g @canghe_ai/wechat-cli
 ```
+
+## 图片 / 视频（V2 .dat）— 0.4.0 新增
+
+微信 4.x 的图片缓存是 `.dat`（AES-128-ECB + 尾部单字节 XOR）。本版本内置完整链路：
+
+```bash
+wechat-cli media key --watch 120      # 抓图片 AES key（期间在微信里点开 2~3 张大图）
+wechat-cli media decrypt              # 批量解密为 .jpg/.png/.wxgf
+wechat-cli media index                # 图片与消息配对，输出 CSV
+wechat-cli media html                 # 生成可浏览的聊天时间线（图片内联）
+```
+
+### V2 结构（4.2.0.13 实测）
+
+```
+[0:6]   07 08 56 32 08 07
+[6:10]  aes_size   (LE, 通常 1024)
+[10:14] xor_size   (LE, 尾部 XOR 字节数)
+[14]    pad
+[15:]   AES-128-ECB 段 + 中间明文 + 尾部 XOR（JPEG 尾巴可反推出 0x70）
+```
+
+### 说明
+
+- AES key 是 16 字节，登录后可能常驻内存，也可能需要点开大图才出现——`media key` 会持续轮询
+- 命中判据用真实密文做 AES 试解并校验图片结构魔数，不依赖字符串特征
+- 缓存目录 `msg/attach/<32hex>` 的 `<32hex>` 等于 `md5(会话 username)`，配对用它 + 时间就近
+- `.wxgf` 是微信自有 HEVC 容器，可解出文件但**画面不完整**（数据非完整码流），默认保留原文件
